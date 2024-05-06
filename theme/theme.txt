@@ -57,5 +57,5 @@ terminal-border: "0"
 + image {
 	top = 100%-56
 	left = 50%-175
-    file = "help_bar.png"
+    file = "arc_footer.png"
 }
