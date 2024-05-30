@@ -44,7 +44,8 @@ jobs:
       # Zip image and generate checksum
       - name: Pack
         run: |
-          zip -r -9 "arc-theme.zip" ./theme
+          zip -r -9 arc-theme.zip ./theme
+          sha256sum arc-theme.zip >checksum.sha256
 
       # Upload artifact
       - name: Upload
@@ -54,6 +55,7 @@ jobs:
           name: Images
           path: |
             arc-theme.zip
+            checksum.sha256
           retention-days: 5
 
       # Publish a release if is a tag
@@ -65,3 +67,4 @@ jobs:
           allowUpdates: true
           artifacts: |
             arc-theme.zip
+            checksum.sha256
