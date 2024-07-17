@@ -11,9 +11,13 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "format %y.%-m.$i or auto"
+        description: "format %y.%m.$d or auto"
         required: false
         type: string
+      latest:
+        description: "latest"
+        default: true
+        type: boolean
 
 jobs:
   build:
@@ -30,12 +34,7 @@ jobs:
           if [ -n "${{ inputs.version }}" ]; then
             VERSION="${{ inputs.version }}"
           else
-            LATEST_TAG="$(curl -skL "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r ".tag_name" 2>/dev/null)"
-            if [[ -n "${LATEST_TAG}" && "`echo ${LATEST_TAG} | cut -d '.' -f 1,2`" = "`date +'%y.%-m.%-d'`" ]]; then  # format %y.%-m.$i
-              VERSION="`echo ${LATEST_TAG} | awk -F '.' '{$3=$3+1}1' OFS='.'`"
-            else
-              VERSION="`date +'%y.%-m.%-d'`"
-            fi
+            VERSION="`date +'%y.%m.%d'`"
           fi
           
           echo "Version: ${VERSION}"
@@ -64,6 +63,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.VERSION }}
+          makeLatest: ${{ inputs.latest }}
           allowUpdates: true
           artifacts: |
             arc-theme.zip
