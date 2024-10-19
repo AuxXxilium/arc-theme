@@ -43,19 +43,7 @@ jobs:
       # Zip image and generate checksum
       - name: Pack
         run: |
-          zip -r -9 arc-theme.zip ./theme
-          sha256sum arc-theme.zip >checksum.sha256
-
-      # Upload artifact
-      - name: Upload
-        if: success() && env.VERSION == ''
-        uses: actions/upload-artifact@v4
-        with:
-          name: Images
-          path: |
-            arc-theme.zip
-            checksum.sha256
-          retention-days: 5
+          zip -9r arc-theme-${{ env.VERSION }}.zip ./theme
 
       # Publish a release if is a tag
       - name: Release
@@ -66,5 +54,4 @@ jobs:
           makeLatest: ${{ inputs.latest }}
           allowUpdates: true
           artifacts: |
-            arc-theme.zip
-            checksum.sha256
+            arc-theme-*.zip
