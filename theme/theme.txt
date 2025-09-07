@@ -31,7 +31,7 @@ terminal-border: "0"
 + image {
 	top = 50%-300
 	left = 50%-420
-    file = "arc_logo.png"
+    file = "arc_loader.png"
 }
 
 #boot menu
