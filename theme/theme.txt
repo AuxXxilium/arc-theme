@@ -1,12 +1,12 @@
 # Arc Theme for GRUB2
 #
-# Copyright (C) 2024 AuxXxilium
+# Copyright (C) 2026 AuxXxilium
 
 #general settings
 title-text: ""
-desktop-color: "#333"
+desktop-color: "#101116"
 
-terminal-font: "Dejavu Sans Mono 12"
+terminal-font: "DejaVu Sans Mono 12"
 terminal-left: "0"
 terminal-top: "0"
 terminal-width: "100%"
@@ -21,10 +21,8 @@ terminal-border: "0"
 	height = 15
 	width = 100%
 	show_text = false
-
-	# just two vertical pixels of color #1793d1
-    bar_style = "progress_bar/progress_bar_*.png"
-    highlight_style = "progress_bar/progress_bar_hl_*.png"
+	fg_color = "#d12b2b"
+	bg_color = "#1a1a1a"
 }
 
 # arc logo
@@ -42,14 +40,19 @@ terminal-border: "0"
 	height = 400
 
 	item_font = "DejaVu Sans Bold 14"
-	item_color = "#999"
+	item_color = "#bbb"
 	selected_item_font = "DejaVu Sans Bold 14"
-	selected_item_color= "#fff"
+	selected_item_color = "#fff"
+	selected_frame_color = "#d12b2b"
+	selected_frame_padding = 6
+	selected_frame_style = "solid"
 
-	item_height = 26
-	item_padding = 0
+	item_height = 28
+	item_padding = 8
 	item_icon_space = 0
-	item_spacing = 1
+	item_spacing = 4
+	frame_color = "#181a20"
+	frame_padding = 12
 	scrollbar = false
 }
 
