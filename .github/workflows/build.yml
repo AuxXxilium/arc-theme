@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-name: Build Arc Theme
+name: Build arc theme
 
 on:
   workflow_dispatch:

@@ -1,10 +1,31 @@
-# Arc Theme for GRUB2
+# arc theme for GRUB2
 #
 # Copyright (C) 2026 AuxXxilium
+#
+# Ported from arx's theme, which is itself a port of arc's. The geometry
+# is arx's unchanged -- the offsets below were worked out against artwork
+# of exactly these dimensions, and the artwork here keeps arx's layout
+# with arc's logo in place of arx's mark (see mktheme.py).
 
-#general settings
 title-text: ""
 desktop-color: "#101116"
+
+# A desktop-image, and it is not decoration -- it is what stops the menu
+# being replaced by "error: null src bitmap in
+# grub_video_bitmap_create_scaled" and a keypress prompt on every boot.
+#
+# GRUB's init_background() scales raw_desktop_image without first
+# checking that there is one. The default scale method is STRETCH, which
+# takes the grub_video_bitmap_create_scaled branch, and that function's
+# first act is to fail when handed a null source. A theme with no image
+# therefore cannot draw its background at all. The NULL check exists
+# upstream now, but not in every GRUB this theme is loaded by.
+#
+# So the file is supplied rather than the property omitted: a 2x2 PNG of
+# the same colour as desktop-color, stretched to the screen. 73 bytes is
+# cheaper than carrying a patch against GRUB.
+desktop-image: "background.png"
+desktop-image-scale-method: "stretch"
 
 terminal-font: "DejaVu Sans Mono 12"
 terminal-left: "0"
@@ -13,7 +34,21 @@ terminal-width: "100%"
 terminal-height: "100%"
 terminal-border: "0"
 
-#progress bar
+# The timeout bar: colour only, no pixmaps. A progress_bar falls back to
+# drawing filled rectangles when no bar_style is given.
+#
+# id = "__timeout__" is what makes GRUB drive it. Without that exact id
+# it is an inert rectangle: the countdown is bound to the id, not to the
+# component.
+#
+# The fill is selected_item_color, so the bar draining and the
+# highlighted entry are visibly the same accent; the trough is a step off
+# desktop-color so the bar's full width reads as a track rather than as a
+# band across the screen.
+#
+# show_text = false: GRUB already writes "The highlighted entry will be
+# executed automatically in Ns" into the menu, and a number inside a 15px
+# bar at the top of the screen says it a second time in a worse place.
 + progress_bar {
 	id = "__timeout__"
 	left = 0
@@ -22,43 +57,71 @@ terminal-border: "0"
 	width = 100%
 	show_text = false
 	fg_color = "#d12b2b"
-	bg_color = "#1a1a1a"
+	bg_color = "#1a1b21"
 }
 
-# arc logo
+# The banner. Centred horizontally by half the image's width (822/2) so
+# it is genuinely centred rather than centred at one screen size and
+# drifting at others.
+#
+# The vertical offset is arx's, not the old arc theme's, and the
+# difference matters: the banner is 822x180 with a dashed rule near its
+# foot, and at the old top = 50%-300 the banner floated far above the
+# menu. Stacked instead -- the banner ends just above the menu and the
+# rule reads as a divider between them.
 + image {
-	top = 50%-300
-	left = 50%-420
-    file = "arc_loader.png"
+	top = 50%-200
+	left = 50%-411
+	file = "arc_loader.png"
 }
 
-#boot menu
+# Below the banner, not overlapping it.
 + boot_menu {
-	left = 50%-150
+	left = 50%-250
 	width = 500
-	top = 50%
-	height = 400
+	top = 50%-10
+	height = 200
 
+	# Colours and fonts only, and no frame styles.
+	#
+	# selected_frame_style and the rest name pixmap FILES by prefix, and
+	# this theme ships none -- so pointing at them would ask GRUB to load
+	# images that are not there. The selection is still obvious without
+	# them: selected_item_color against item_color is the difference GRUB
+	# draws with text alone.
+	#
+	# Light grey rather than mid grey. A boot menu is read on whatever is
+	# plugged in, often a KVM console or a scaled-down VGA mode, where the
+	# thin strokes of a bitmap font at this size thin out further. The
+	# selection still reads because red against grey is a hue difference,
+	# not only a brightness one.
 	item_font = "DejaVu Sans Bold 14"
-	item_color = "#bbb"
+	item_color = "#e5e7eb"
 	selected_item_font = "DejaVu Sans Bold 14"
-	selected_item_color = "#fff"
-	selected_frame_color = "#d12b2b"
-	selected_frame_padding = 6
-	selected_frame_style = "solid"
+	selected_item_color = "#d12b2b"
 
 	item_height = 28
 	item_padding = 8
 	item_icon_space = 0
 	item_spacing = 4
-	frame_color = "#181a20"
-	frame_padding = 12
 	scrollbar = false
 }
 
-#help bar at the bottom
 + image {
-	top = 100%-56
-	left = 50%-175
-    file = "arc_footer.png"
+	top = 100%-76
+	left = 50%-185
+	file = "arc_footer.png"
+}
+
++ label {
+	top = 100%-40
+	left = 0
+	width = 100%
+	align = "center"
+	text = "Arrow keys to choose, Enter to boot, E to edit"
+	# Not #6b7280: that is about 3.4:1 on this background, the least
+	# readable thing on the screen, and it is the one line telling a
+	# first-time user what to do.
+	color = "#9ca3af"
+	font = "DejaVu Sans Mono 12"
 }

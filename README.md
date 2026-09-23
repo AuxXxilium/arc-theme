@@ -1,4 +1,4 @@
-# Theme for Arc Redpill Loader
+# Theme for arc Redpill Loader
 
 ### Links
 
